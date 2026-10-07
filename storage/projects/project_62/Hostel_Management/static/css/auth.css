@@ -1,0 +1,458 @@
+/* ==========================================================================
+   AUTH PORTAL STYLING (STUDENT & ADMIN LOGIN / REGISTRATION) - PROFESSIONAL SPLIT LAYOUT
+   ========================================================================== */
+
+/* Layout Reset & Keyframes */
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background-color: var(--bg-main);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes floatBackground {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Header overrides */
+.auth-header-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+}
+
+.auth-navbar {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  padding: 1.5rem 3rem !important;
+}
+
+.auth-navbar .nav-brand {
+  color: #ffffff !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.auth-navbar .nav-logo-icon {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white !important;
+}
+
+.auth-back-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(8px);
+}
+
+.auth-back-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Split Layout */
+.auth-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.auth-banner {
+  flex: 1.2;
+  display: none; /* Mobile hidden */
+  position: relative;
+  background: linear-gradient(145deg, var(--primary) 0%, #00125e 100%);
+  color: white;
+  padding: 4rem;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (min-width: 900px) {
+  .auth-banner {
+    display: flex;
+  }
+}
+
+/* Add an image layer if there was one, blending it smoothly */
+.auth-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url('../img/login_cover.jpg') center/cover no-repeat;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* Abstract shapes for visual flair */
+.auth-banner-overlay {
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+  border-radius: 50%;
+  z-index: 2;
+  animation: floatBackground 12s infinite ease-in-out;
+}
+
+.auth-banner-overlay::after {
+  content: '';
+  position: absolute;
+  bottom: -40%;
+  right: -50%;
+  width: 90%;
+  height: 90%;
+  background: radial-gradient(circle, rgba(0, 96, 172, 0.4) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.auth-banner-content {
+  position: relative;
+  z-index: 10;
+  max-width: 520px;
+  margin: 0 auto;
+  animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.banner-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.auth-banner-content h1 {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+  color: #ffffff;
+  letter-spacing: -1.5px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.auth-banner-content p {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+.banner-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.feature-item .material-symbols-outlined {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.6rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Right Content Section */
+.auth-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  background-color: var(--surface-container-lowest);
+  position: relative;
+  box-shadow: -10px 0 30px rgba(0,0,0,0.03);
+  z-index: 20;
+}
+
+@media (min-width: 900px) {
+  .auth-content {
+    flex: 0 0 520px;
+  }
+}
+@media (min-width: 1200px) {
+  .auth-content {
+    flex: 0 0 600px;
+  }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.auth-card.wide {
+  max-width: 520px;
+}
+
+.auth-header {
+  margin-bottom: 2.25rem;
+  text-align: left;
+}
+
+.auth-header h2 {
+  font-size: 2.25rem;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.auth-header p {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--surface-container-low);
+  padding: 0.4rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2.25rem;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.85rem 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.auth-tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(0,0,0,0.02);
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Forms */
+.auth-form-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Floating Labels */
+.floating-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.floating-input {
+  width: 100%;
+  padding: 1.1rem 1rem 0.4rem;
+  background: var(--bg-main);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-main);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  height: 3.75rem;
+}
+
+.floating-input:hover {
+  background: var(--surface-container-lowest);
+}
+
+.floating-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+  background: var(--surface-container-lowest);
+}
+
+.floating-label {
+  position: absolute;
+  top: 1.15rem;
+  left: 1rem;
+  font-size: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: left top;
+}
+
+.floating-input:focus ~ .floating-label,
+.floating-input:not(:placeholder-shown) ~ .floating-label {
+  transform: translateY(-0.75rem) scale(0.75);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* Form Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.remember-me input {
+  accent-color: var(--primary);
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.forgot-password {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.forgot-password:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  height: 3.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary) 0%, #0040dd 100%);
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 40, 142, 0.2);
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 40, 142, 0.3);
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #0033b0 100%);
+}
+
+.auth-submit-btn:active {
+  transform: translateY(1px);
+}
+
+.auth-submit-btn .material-symbols-outlined {
+  transition: transform 0.2s ease;
+}
+
+.auth-submit-btn:hover .material-symbols-outlined {
+  transform: translateX(4px);
+}
+
+.auth-footer {
+  margin-top: 3.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-subtle);
+  font-weight: 500;
+}
+
+/* Specific select height adjustment */
+.form-select {
+  height: 3.75rem;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-subtle);
+}
+
+.form-select:focus {
+  background-color: var(--surface-container-lowest);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+/* Responsive Navbar specific for auth */
+@media (max-width: 900px) {
+  .auth-navbar {
+    padding: 1rem 1.5rem !important;
+  }
+  .auth-navbar .nav-brand {
+    color: var(--primary) !important;
+    text-shadow: none;
+  }
+  .auth-navbar .nav-logo-icon {
+    background: var(--primary) !important;
+    color: white !important;
+    border: none;
+  }
+  .auth-header-nav {
+    position: relative;
+    background: var(--surface-container-lowest);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .auth-content {
+    padding-top: 2rem;
+  }
+  .auth-back-btn {
+    background: var(--surface-container-low) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border-subtle) !important;
+  }
+}

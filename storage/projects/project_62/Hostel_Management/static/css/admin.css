@@ -1,0 +1,176 @@
+/* ==========================================================================
+   ADMIN PORTAL & DASHBOARD STYLING
+   ========================================================================== */
+
+/* Metrics Stats Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.stat-icon.primary { background: var(--primary-fixed); color: var(--primary); }
+.stat-icon.cyan { background: rgba(0, 96, 172, 0.12); color: var(--secondary); }
+.stat-icon.emerald { background: rgba(22, 163, 74, 0.12); color: var(--emerald); }
+.stat-icon.amber { background: rgba(217, 119, 6, 0.12); color: var(--amber); }
+.stat-icon.rose { background: var(--rose-bg); color: var(--rose); }
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.stat-footer {
+  margin-top: 0.5rem;
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Quick Actions Bar */
+.actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.actions-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-container);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.85rem;
+  min-width: 260px;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  width: 100%;
+  outline: none;
+}
+
+/* Data Table Action Buttons */
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.action-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+  background: var(--surface-container);
+  color: var(--text-main);
+}
+
+.action-btn.allocate {
+  color: var(--primary);
+  border-color: var(--primary-fixed-dim);
+  background: var(--primary-fixed);
+}
+.action-btn.allocate:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.action-btn.vacate {
+  color: var(--rose);
+  border-color: var(--rose-bg);
+  background: var(--rose-bg);
+}
+.action-btn.vacate:hover {
+  background: var(--rose);
+  color: #ffffff;
+}
+
+.action-btn.resolve {
+  color: var(--emerald);
+  border-color: var(--emerald-bg);
+  background: var(--emerald-bg);
+}
+.action-btn.resolve:hover {
+  background: var(--emerald);
+  color: #ffffff;
+}

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warden Administration Portal — HostelHub Enterprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="navbar" aria-label="Admin Navigation">
+      <div class="nav-brand">
+        <div class="nav-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span>HostelHub <small style="font-size:0.75rem; color:var(--primary); font-weight:600; text-transform:uppercase;">Admin Control</small></span>
+      </div>
+
+      <div class="nav-user">
+        <div class="nav-user-badge">
+          <span><i class="fa-solid fa-crown"></i></span>
+          <div>
+            <span id="admin-nav-name" style="display:block; line-height:1.2;">Warden Admin</span>
+            <small id="admin-nav-role" style="font-size:0.7rem; color:var(--text-muted);">Chief Warden</small>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="API.logout()">
+          Logout <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Top Metrics Overview Grid -->
+    <section class="metrics-grid">
+      <!-- 1. Total Students -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Total Students</span>
+          <div class="stat-icon primary"><i class="fa-solid fa-users"></i></div>
+        </div>
+        <div class="stat-value" id="stat-total-students">—</div>
+        <div class="stat-footer">
+          <span>Registered campus residents</span>
+        </div>
+      </div>
+
+      <!-- 2. Total Rooms -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Total Rooms</span>
+          <div class="stat-icon cyan"><i class="fa-solid fa-building"></i></div>
+        </div>
+        <div class="stat-value" id="stat-total-rooms">—</div>
+        <div class="stat-footer">
+          <span>Across Block A & Block B</span>
+        </div>
+      </div>
+
+      <!-- 3. Occupied Beds -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Bed Occupancy</span>
+          <div class="stat-icon emerald"><i class="fa-solid fa-bed"></i></div>
+        </div>
+        <div class="stat-value" id="stat-occupied-beds">—</div>
+        <div class="stat-footer">
+          <div class="occupancy-meter" style="height: 4px; margin: 0; width: 100%;">
+            <div id="stat-occupancy-bar" class="occupancy-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Available Beds -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Available Beds</span>
+          <div class="stat-icon amber"><i class="fa-solid fa-sparkles"></i></div>
+        </div>
+        <div class="stat-value" id="stat-available-beds">—</div>
+        <div class="stat-footer">
+          <span>Ready for instant allocation</span>
+        </div>
+      </div>
+
+      <!-- 5. Occupancy Rate -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Occupancy Rate</span>
+          <div class="stat-icon primary"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+        <div class="stat-value" id="stat-occupancy-rate">—</div>
+        <div class="stat-footer">
+          <span>Capacity utilization</span>
+        </div>
+      </div>
+
+      <!-- 6. Pending Complaints -->
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Pending Tickets</span>
+          <div class="stat-icon rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        </div>
+        <div class="stat-value" id="stat-pending-complaints" style="color: var(--rose);">—</div>
+        <div class="stat-footer">
+          <span>Awaiting warden action</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Navigation Tabs -->
+    <div class="tabs-nav">
+      <button class="tab-btn admin-tab-btn active" data-tab="overview"><i class="fa-solid fa-chart-column"></i> Overview</button>
+      <button class="tab-btn admin-tab-btn" data-tab="rooms"><i class="fa-solid fa-building"></i> Room Inventory</button>
+      <button class="tab-btn admin-tab-btn" data-tab="students"><i class="fa-solid fa-user-graduate"></i> Student Directory</button>
+      <button class="tab-btn admin-tab-btn" data-tab="bookings"><i class="fa-solid fa-clipboard-list"></i> Allocations & Log</button>
+      <button class="tab-btn admin-tab-btn" data-tab="complaints"><i class="fa-solid fa-toolbox"></i> Complaints Resolution</button>
+    </div>
+
+    <!-- SECTION 1: OVERVIEW & ANALYTICS -->
+    <section id="section-overview">
+      <div class="page-header" style="margin-bottom: 1rem;">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-chart-column"></i> Operations Analytics</h2>
+          <p>Real-time room distribution and recent maintenance events</p>
+        </div>
+      </div>
+
+      <!-- Room Distribution Breakdown -->
+      <div class="card" style="margin-bottom: 2rem;">
+        <h3 style="margin-bottom: 0.5rem;">Hostel Room Inventory by Configuration</h3>
+        <div id="room-distribution-container" class="room-dist-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Two-column Recent Activity Split -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+        <!-- Recent Bookings -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><span><i class="fa-solid fa-clipboard-list"></i></span> Recent Bookings</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Room</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-bookings-body">
+                <tr><td colspan="4" class="empty-state">Loading recent bookings...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Complaints -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><span><i class="fa-solid fa-toolbox"></i></span> Recent Complaints</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Issue</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recent-complaints-body">
+                <tr><td colspan="4" class="empty-state">Loading recent complaints...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ROOMS INVENTORY -->
+    <section id="section-rooms" style="display: none;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-building"></i> Room Directory & Inventory</h2>
+          <p>Manage hostel rooms, bed capacities, amenities, and current resident occupants</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('add-room-modal')">
+          + Add New Room
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Room #</th>
+                <th>Block / Wing</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Current Occupancy</th>
+                <th>Status</th>
+                <th>Occupants</th>
+              </tr>
+            </thead>
+            <tbody id="rooms-table-body">
+              <tr><td colspan="7" class="empty-state">Loading rooms directory...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: STUDENT DIRECTORY & ALLOCATIONS -->
+    <section id="section-students" style="display: none;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-user-graduate"></i> Registered Student Directory</h2>
+          <p>Manage registered residents, allocate available rooms, and execute vacate actions</p>
+        </div>
+        <div style="min-width: 260px;">
+          <input type="text" id="student-search-input" class="form-input" placeholder="<i class="fa-solid fa-magnifying-glass"></i> Search by name, roll, or email...">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Roll Number</th>
+                <th>Student Details</th>
+                <th>Department</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Allocated Room</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="students-table-body">
+              <tr><td colspan="7" class="empty-state">Loading students directory...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ALLOCATIONS & AUDIT LOG -->
+    <section id="section-bookings" style="display: none;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-clipboard-list"></i> Room Allocation History & Audit Log</h2>
+          <p>Complete historical records of all student room allocations, move-in, and vacate logs</p>
+        </div>
+        <div>
+          <select id="booking-status-filter" class="form-select" style="width: auto;">
+            <option value="">All Statuses</option>
+            <option value="Active">Active Allocations</option>
+            <option value="Vacated">Vacated History</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Student Resident</th>
+                <th>Room & Block</th>
+                <th>Allocation Date</th>
+                <th>Vacate Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-table-body">
+              <tr><td colspan="7" class="empty-state">Loading booking records...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: COMPLAINTS RESOLUTION CENTER -->
+    <section id="section-complaints" style="display: none;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-toolbox"></i> Complaints Resolution Center</h2>
+          <p>Review student maintenance tickets, update progress, and log warden resolution notes</p>
+        </div>
+        <div class="filter-group">
+          <button type="button" class="filter-pill complaint-status-pill active" data-status="">All Tickets</button>
+          <button type="button" class="filter-pill complaint-status-pill" data-status="Pending">Pending</button>
+          <button type="button" class="filter-pill complaint-status-pill" data-status="In Progress">In Progress</button>
+          <button type="button" class="filter-pill complaint-status-pill" data-status="Resolved">Resolved</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Issue Summary</th>
+                <th>Student & Room</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Resolution</th>
+              </tr>
+            </thead>
+            <tbody id="complaints-table-body">
+              <tr><td colspan="7" class="empty-state">Loading complaints tickets...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==============================================================
+       MODALS
+       ============================================================== -->
+
+  <!-- Modal 1: Add New Room -->
+  <div id="add-room-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Hostel Room</h3>
+        <button class="modal-close" onclick="closeModal('add-room-modal')">×</button>
+      </div>
+
+      <form id="add-room-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="new-room-number">Room Number *</label>
+            <input type="text" id="new-room-number" class="form-input" placeholder="e.g. A-301" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-room-block">Block / Wing Name *</label>
+            <input type="text" id="new-room-block" class="form-input" placeholder="e.g. Block A (North)" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="new-room-type">Room Type *</label>
+            <select id="new-room-type" class="form-select" required>
+              <option value="Single">Single (1 Bed)</option>
+              <option value="Double" selected>Double (2 Beds)</option>
+              <option value="Triple">Triple (3 Beds)</option>
+              <option value="Deluxe Suite">Deluxe Suite</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="new-room-capacity">Bed Capacity *</label>
+            <input type="number" id="new-room-capacity" class="form-input" value="2" min="1" max="10" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-room-price">Fee per Semester / Term (₹)</label>
+          <input type="number" id="new-room-price" class="form-input" value="24000" min="0" step="500">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-room-amenities">Amenities (Comma separated)</label>
+          <input type="text" id="new-room-amenities" class="form-input" placeholder="e.g. Attached Washroom, Study Desks, Wi-Fi, AC">
+        </div>
+
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="closeModal('add-room-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1.5;">Create Room</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Admin Room Allocation -->
+  <div id="admin-allocate-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Allocate Room to Student</h3>
+        <button class="modal-close" onclick="closeModal('admin-allocate-modal')">×</button>
+      </div>
+
+      <form id="admin-allocate-form">
+        <input type="hidden" id="allocate-student-id">
+
+        <div style="background: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--border-subtle);">
+          <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Target Student</span>
+          <div style="font-size:1.1rem; font-weight:700; color:var(--text-main); margin-top:0.2rem;" id="allocate-student-display">Student Name</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="allocate-room-select">Select Available Room *</label>
+          <select id="allocate-room-select" class="form-select" required>
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="allocate-date-input">Allocation Date *</label>
+          <input type="date" id="allocate-date-input" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="allocate-remarks-input">Administrative Remarks</label>
+          <input type="text" id="allocate-remarks-input" class="form-input" placeholder="e.g. Regular semester room allotment by Warden">
+        </div>
+
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="closeModal('admin-allocate-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1.5;">Confirm Allocation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Room Occupants Viewer -->
+  <div id="room-occupants-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="occupants-modal-title">Room Occupants</h3>
+        <button class="modal-close" onclick="closeModal('room-occupants-modal')">×</button>
+      </div>
+
+      <div id="occupants-list-container" style="margin-top: 1rem;">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Resolve Complaint / Remarks -->
+  <div id="resolve-complaint-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Update Complaint Status</h3>
+        <button class="modal-close" onclick="closeModal('resolve-complaint-modal')">×</button>
+      </div>
+
+      <form id="resolve-complaint-form">
+        <input type="hidden" id="resolve-complaint-id">
+
+        <div style="background: var(--bg-surface); padding: 0.85rem 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; border: 1px solid var(--border-subtle);">
+          <div style="font-weight: 700; color: var(--text-main);" id="resolve-complaint-title">Ticket Title</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="resolve-status-select">Status Action *</label>
+          <select id="resolve-status-select" class="form-select" required>
+            <option value="Pending">Pending Review</option>
+            <option value="In Progress">In Progress (Maintenance Assigned)</option>
+            <option value="Resolved">Resolved (Work Completed)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="resolve-remarks-input">Warden / Maintenance Remarks</label>
+          <textarea id="resolve-remarks-input" class="form-textarea" placeholder="Add details of action taken or instructions for student..."></textarea>
+        </div>
+
+        <div style="display:flex; gap:0.75rem; margin-top:1.5rem;">
+          <button type="button" class="btn btn-secondary" style="flex:1;" onclick="closeModal('resolve-complaint-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex:1.5;">Update Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 HostelHub Enterprise • Chief Warden Administrative Control Dashboard</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

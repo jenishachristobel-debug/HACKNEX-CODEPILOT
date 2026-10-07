@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>HostelHub - Enterprise Hostel Management System</title>
+  <meta name="description" content="Streamline operations, optimize room allocation, and enhance resident experiences with our enterprise-grade management platform.">
+  
+  <!-- Tailwind CDN & Fonts -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#454747",
+            "surface-dim": "#d9dadc",
+            "inverse-primary": "#b8c4ff",
+            "outline": "#757684",
+            "error": "#ba1a1a",
+            "on-background": "#191c1e",
+            "tertiary-fixed": "#e2e2e2",
+            "outline-variant": "#c4c5d5",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "secondary": "#0060ac",
+            "surface": "#f8f9fb",
+            "surface-container-low": "#f3f4f6",
+            "surface-container": "#edeef0",
+            "inverse-on-surface": "#f0f1f3",
+            "secondary-fixed-dim": "#a4c9ff",
+            "on-error": "#ffffff",
+            "primary-fixed": "#dde1ff",
+            "surface-tint": "#3755c3",
+            "on-tertiary-container": "#babbbb",
+            "tertiary-fixed-dim": "#c6c6c7",
+            "tertiary-container": "#494b4c",
+            "primary-fixed-dim": "#b8c4ff",
+            "primary": "#00288e",
+            "surface-container-highest": "#e1e2e4",
+            "primary-container": "#1e40af",
+            "on-primary-container": "#a8b8ff",
+            "inverse-surface": "#2e3132",
+            "on-tertiary-fixed": "#1a1c1c",
+            "tertiary": "#333535",
+            "secondary-container": "#64a8fe",
+            "on-error-container": "#93000a",
+            "surface-bright": "#f8f9fb",
+            "on-primary-fixed": "#001453",
+            "surface-container-high": "#e7e8ea",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed-variant": "#004883",
+            "on-secondary-fixed": "#001c39",
+            "on-tertiary": "#ffffff",
+            "secondary-fixed": "#d4e3ff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#444653",
+            "background": "#f8f9fb",
+            "on-primary-fixed-variant": "#173bab",
+            "on-secondary-container": "#003c70",
+            "surface-variant": "#e1e2e4",
+            "on-surface": "#191c1e"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "xl": "32px",
+            "grid-gutter": "16px",
+            "xs": "4px",
+            "md": "16px",
+            "grid-margin": "24px",
+            "sm": "8px",
+            "base": "4px",
+            "lg": "24px"
+          },
+          "fontFamily": {
+            "headline-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "mono-sm": ["monospace"],
+            "display-lg": ["Inter"],
+            "label-md": ["Inter"]
+          },
+          "fontSize": {
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "mono-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-surface-container-low text-on-surface font-body-md min-h-screen flex flex-col">
+
+  <!-- TopNavBar -->
+  <nav class="bg-black/40 backdrop-blur-lg border-b border-white/10 shadow-sm fixed top-0 left-0 w-full z-50 flex justify-between items-center px-grid-margin py-3">
+    <div class="flex items-center space-x-lg">
+      <a href="/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 bg-primary/90 text-white rounded flex items-center justify-center font-bold text-lg border border-white/20 group-hover:bg-primary transition-colors">
+          <span class="material-symbols-outlined text-xl">apartment</span>
+        </div>
+        <span class="font-display-lg text-2xl font-bold text-white tracking-tight drop-shadow-md">HostelHub</span>
+      </a>
+      <div class="hidden md:flex space-x-md">
+        <a class="text-gray-300 font-medium hover:text-white transition-colors duration-200 text-sm drop-shadow" href="#features">Features</a>
+        <a class="text-gray-300 font-medium hover:text-white transition-colors duration-200 text-sm drop-shadow" href="#live-stats">Live Status</a>
+        <a class="text-gray-300 font-medium hover:text-white transition-colors duration-200 text-sm drop-shadow" href="#trust-metrics">Metrics</a>
+      </div>
+    </div>
+    <div class="flex items-center space-x-3">
+      <a href="/login" class="bg-primary text-on-primary font-semibold text-sm px-4 py-2 rounded hover:bg-primary-container transition-colors duration-200 shadow-sm flex items-center gap-1.5 border border-primary-container">
+        <span class="material-symbols-outlined text-base">login</span>
+        <span>Login</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Content Canvas -->
+  <main class="flex-grow">
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 pb-16 px-grid-margin text-center overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img src="{{ url_for('static', filename='img/cover.jpg') }}" alt="Hostel Cover" class="w-full h-full object-cover" />
+        <!-- Gradient overlay transitioning into the surface color of the next section -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-surface"></div>
+      </div>
+      
+      <!-- Content -->
+      <div class="relative z-10 max-w-4xl mx-auto pt-12">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-white text-xs font-semibold uppercase tracking-wider mb-8 border border-white/20 shadow-lg">
+          <span class="material-symbols-outlined text-sm">bolt</span>
+          <span>Enterprise Campus Living OS</span>
+        </div>
+        <h1 class="font-display-lg text-5xl sm:text-6xl md:text-7xl text-white mb-6 leading-tight font-extrabold drop-shadow-lg tracking-tight">
+          Manage Your Hostel with <span class="text-blue-400">Precision</span>
+        </h1>
+        <p class="font-body-lg text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+          Streamline operations, optimize room allocation, and enhance resident experiences with our enterprise-grade management platform.
+        </p>
+        <div class="flex justify-center items-center gap-5 flex-wrap">
+          <a href="/login" class="bg-primary text-white font-bold text-base px-8 py-4 rounded-lg hover:bg-primary-container transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 inline-flex items-center gap-2 border border-primary-container">
+            <span>Schedule Demo / Sign In</span>
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </a>
+          <a href="#features" class="bg-white/10 backdrop-blur-md border border-white/30 text-white font-bold text-base px-8 py-4 rounded-lg hover:bg-white hover:text-primary transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 inline-flex items-center gap-2">
+            <span>Explore Features</span>
+            <span class="material-symbols-outlined text-lg">expand_more</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section id="trust-metrics" class="bg-surface border-b border-outline-variant py-lg px-grid-margin">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-grid-gutter text-center divide-y md:divide-y-0 md:divide-x divide-outline-variant">
+        <div class="py-md md:py-0">
+          <div class="font-display-lg text-3xl font-bold text-primary mb-xs">1,200+</div>
+          <div class="font-label-md text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Institutions Worldwide</div>
+        </div>
+        <div class="py-md md:py-0">
+          <div class="font-display-lg text-3xl font-bold text-primary mb-xs">98%</div>
+          <div class="font-label-md text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Client Retention Rate</div>
+        </div>
+        <div class="py-md md:py-0">
+          <div class="font-display-lg text-3xl font-bold text-primary mb-xs">24/7</div>
+          <div class="font-label-md text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Global Enterprise Support</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Occupancy Snapshot Grid -->
+    <section id="live-stats" class="py-16 px-grid-margin bg-surface-container-low">
+      <div class="max-w-7xl mx-auto">
+        <div class="bg-surface-container-lowest p-8 rounded-lg border border-outline-variant shadow-sm">
+          <div class="flex flex-wrap justify-between items-center pb-4 mb-6 border-b border-outline-variant">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-2xl">monitoring</span>
+              <h2 class="font-headline-md text-xl font-bold text-on-surface">Live Campus Operations & Occupancy</h2>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Real-time Connected
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-surface-container p-5 rounded border border-outline-variant/60">
+              <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Total Student Residents</span>
+              <div class="text-3xl font-extrabold text-primary" id="landing-students">—</div>
+            </div>
+            <div class="bg-surface-container p-5 rounded border border-outline-variant/60">
+              <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Available Free Beds</span>
+              <div class="text-3xl font-extrabold text-emerald-600" id="landing-available-beds">—</div>
+            </div>
+            <div class="bg-surface-container p-5 rounded border border-outline-variant/60">
+              <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Active Hostel Rooms</span>
+              <div class="text-3xl font-extrabold text-secondary" id="landing-rooms">—</div>
+            </div>
+            <div class="bg-surface-container p-5 rounded border border-outline-variant/60">
+              <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block mb-1">Overall Occupancy Rate</span>
+              <div class="text-3xl font-extrabold text-primary" id="landing-occupancy-rate">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Grid -->
+    <section id="features" class="bg-[#EFF6FF] py-20 px-grid-margin border-y border-outline-variant/60">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-14">
+          <h2 class="font-headline-md text-3xl font-bold text-on-surface mb-sm">Comprehensive Management Tools</h2>
+          <p class="font-body-lg text-base text-on-surface-variant max-w-2xl mx-auto">Built specifically for the complex needs of large-scale accommodation providers.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Feature 1 -->
+          <div class="bg-surface-container-lowest p-6 rounded border border-outline-variant shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="w-12 h-12 bg-primary-container text-white rounded flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">payments</span>
+            </div>
+            <h3 class="font-headline-sm text-lg font-bold text-on-surface mb-2">Automated Billing</h3>
+            <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Streamline fee collection, generate automatic invoices, and track payments in real-time with comprehensive financial reporting.</p>
+          </div>
+          <!-- Feature 2 -->
+          <div class="bg-surface-container-lowest p-6 rounded border border-outline-variant shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="w-12 h-12 bg-primary-container text-white rounded flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">meeting_room</span>
+            </div>
+            <h3 class="font-headline-sm text-lg font-bold text-on-surface mb-2">Smart Room Allocation</h3>
+            <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Intelligent algorithms to optimize bed occupancy, manage transfers, and handle maintenance blocking with our interactive availability grid.</p>
+          </div>
+          <!-- Feature 3 -->
+          <div class="bg-surface-container-lowest p-6 rounded border border-outline-variant shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="w-12 h-12 bg-primary-container text-white rounded flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">smartphone</span>
+            </div>
+            <h3 class="font-headline-sm text-lg font-bold text-on-surface mb-2">Digital Resident Portal</h3>
+            <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Empower residents with a self-service app for maintenance requests, digital passes, and community announcements.</p>
+          </div>
+          <!-- Feature 4 -->
+          <div class="bg-surface-container-lowest p-6 rounded border border-outline-variant shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div class="w-12 h-12 bg-primary-container text-white rounded flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">analytics</span>
+            </div>
+            <h3 class="font-headline-sm text-lg font-bold text-on-surface mb-2">Real-time Analytics</h3>
+            <p class="font-body-md text-sm text-on-surface-variant leading-relaxed">Make data-driven decisions with customizable dashboards tracking occupancy rates, revenue metrics, and operational efficiency.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="bg-[#1E40AF] py-20 px-grid-margin text-center text-white">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="font-display-lg text-3xl sm:text-4xl font-extrabold text-white mb-4">Ready to Optimize Your Operations?</h2>
+        <p class="font-body-lg text-base text-blue-100 mb-8 max-w-xl mx-auto">Join leading institutions in upgrading their accommodation management infrastructure.</p>
+        <a href="/login" class="bg-white text-[#1E40AF] font-semibold text-sm px-8 py-3.5 rounded hover:bg-gray-100 transition-all duration-200 shadow-md inline-flex items-center gap-2">
+          <span>Start Your Free Trial</span>
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-surface-container-highest w-full py-12 px-grid-margin border-t border-outline-variant">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto mb-8">
+      <div class="col-span-1 md:col-span-2">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-7 h-7 bg-primary text-white rounded flex items-center justify-center font-bold text-sm">
+            <span class="material-symbols-outlined text-base">apartment</span>
+          </div>
+          <span class="font-headline-sm text-xl font-bold text-primary">HostelHub</span>
+        </div>
+        <p class="font-body-md text-sm text-on-surface-variant max-w-sm">Enterprise-grade management systems for modern accommodation providers.</p>
+      </div>
+      <div>
+        <h4 class="font-semibold text-xs text-on-surface uppercase tracking-wider mb-3">Navigation</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="#">Sitemap</a></li>
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="/login">Portal Login</a></li>
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="#features">Features</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-xs text-on-surface uppercase tracking-wider mb-3">Legal & Security</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+          <li><a class="text-on-surface-variant hover:underline hover:text-primary transition-colors" href="#">GDPR & FERPA Compliance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto pt-6 border-t border-outline/30 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-on-surface-variant">
+      <p>© 2026 HostelHub Management Systems. All rights reserved.</p>
+      <p class="mt-2 md:mt-0">Enterprise Full-Stack Edition</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await API.get('/api/stats/dashboard');
+        if (res.success && res.data) {
+          document.getElementById('landing-students').innerText = res.data.total_students;
+          document.getElementById('landing-available-beds').innerText = res.data.available_beds;
+          document.getElementById('landing-rooms').innerText = res.data.total_rooms;
+          document.getElementById('landing-occupancy-rate').innerText = `${res.data.occupancy_rate}%`;
+        }
+      } catch (e) {
+        console.error('Failed to load landing stats', e);
+      }
+    });
+  </script>
+</body>
+</html>

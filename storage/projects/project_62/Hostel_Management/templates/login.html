@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Registration — HostelHub Enterprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal Header for Split Layout -->
+  <header class="auth-header-nav">
+    <nav class="navbar auth-navbar" aria-label="Main Navigation">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo-icon"><span class="material-symbols-outlined">apartment</span></div>
+        <span>HostelHub</span>
+      </a>
+      <div>
+        <a href="/" class="btn btn-secondary btn-sm flex items-center gap-1 auth-back-btn">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          <span>Back to Home</span>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="auth-layout">
+    <!-- Left branding section -->
+    <div class="auth-banner">
+      <div class="auth-banner-overlay"></div>
+      <div class="auth-banner-content">
+        <div class="banner-badge">Enterprise Edition</div>
+        <h1>Intelligent Hostel Management</h1>
+        <p>Experience seamless administration, instant room allocation, and streamlined communication in one secure platform.</p>
+        
+        <div class="banner-features">
+          <div class="feature-item">
+            <span class="material-symbols-outlined">bolt</span>
+            <span>Real-time updates & analytics</span>
+          </div>
+          <div class="feature-item">
+            <span class="material-symbols-outlined">shield_lock</span>
+            <span>Enterprise-grade security</span>
+          </div>
+          <div class="feature-item">
+            <span class="material-symbols-outlined">support_agent</span>
+            <span>24/7 dedicated support</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right auth section -->
+    <div class="auth-content">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Please enter your credentials to access your portal.</p>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" data-tab="student-login">
+            <span class="material-symbols-outlined text-base">school</span>
+            <span>Student</span>
+          </button>
+          <button type="button" class="auth-tab-btn" data-tab="admin-login">
+            <span class="material-symbols-outlined text-base">shield</span>
+            <span>Warden</span>
+          </button>
+          <button type="button" class="auth-tab-btn" data-tab="student-register">
+            <span class="material-symbols-outlined text-base">edit_document</span>
+            <span>Register</span>
+          </button>
+        </div>
+
+        <!-- 1. Student Login Form -->
+        <div id="student-login-form-box" class="auth-form-container">
+          <form id="student-login-form">
+            <div class="form-group floating-group">
+              <input type="text" id="student-identifier" class="form-input floating-input" placeholder=" " required autocomplete="username">
+              <label class="floating-label" for="student-identifier">Roll Number or Email Address</label>
+            </div>
+
+            <div class="form-group floating-group">
+              <input type="password" id="student-password" class="form-input floating-input" placeholder=" " required autocomplete="current-password">
+              <label class="floating-label" for="student-password">Password</label>
+            </div>
+
+            <div class="form-options">
+              <label class="remember-me">
+                <input type="checkbox"> <span>Remember me</span>
+              </label>
+              <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit-btn">
+              <span>Login to Student Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 2. Admin Login Form -->
+        <div id="admin-login-form-box" class="auth-form-container" style="display: none;">
+          <form id="admin-login-form">
+            <div class="form-group floating-group">
+              <input type="text" id="admin-username" class="form-input floating-input" placeholder=" " required autocomplete="username">
+              <label class="floating-label" for="admin-username">Warden Username</label>
+            </div>
+
+            <div class="form-group floating-group">
+              <input type="password" id="admin-password" class="form-input floating-input" placeholder=" " required autocomplete="current-password">
+              <label class="floating-label" for="admin-password">Password</label>
+            </div>
+
+            <div class="form-options">
+              <label class="remember-me">
+                <input type="checkbox"> <span>Remember me</span>
+              </label>
+              <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit-btn">
+              <span>Login to Admin Dashboard</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- 3. Student Registration Form -->
+        <div id="student-register-form-box" class="auth-form-container" style="display: none;">
+          <form id="student-register-form">
+            <div class="form-row">
+              <div class="form-group floating-group">
+                <input type="text" id="reg-roll" class="form-input floating-input" placeholder=" " required>
+                <label class="floating-label" for="reg-roll">Roll / Reg Number</label>
+              </div>
+              <div class="form-group floating-group">
+                <input type="text" id="reg-name" class="form-input floating-input" placeholder=" " required>
+                <label class="floating-label" for="reg-name">Full Name</label>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group floating-group">
+                <input type="email" id="reg-email" class="form-input floating-input" placeholder=" " required>
+                <label class="floating-label" for="reg-email">Email Address</label>
+              </div>
+              <div class="form-group floating-group">
+                <input type="password" id="reg-password" class="form-input floating-input" placeholder=" " required minlength="6">
+                <label class="floating-label" for="reg-password">Password (Min 6)</label>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group floating-group">
+                <input type="tel" id="reg-phone" class="form-input floating-input" placeholder=" " required>
+                <label class="floating-label" for="reg-phone">Phone Number</label>
+              </div>
+              <div class="form-group">
+                <select id="reg-gender" class="form-select" required>
+                  <option value="" disabled selected>Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group floating-group">
+                <input type="text" id="reg-dept" class="form-input floating-input" placeholder=" " required>
+                <label class="floating-label" for="reg-dept">Course / Dept</label>
+              </div>
+              <div class="form-group floating-group">
+                <input type="text" id="reg-emergency" class="form-input floating-input" placeholder=" ">
+                <label class="floating-label" for="reg-emergency">Emergency Contact</label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit-btn" style="margin-top: 1rem;">
+              <span>Complete Registration</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+      <div class="auth-footer">
+        <p>&copy; 2026 HostelHub Enterprise. All rights reserved.</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast-container"></div>
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>

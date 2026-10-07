@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal — HostelHub Enterprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/student.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header>
+    <nav class="navbar" aria-label="Student Portal Navigation">
+      <div class="nav-brand">
+        <div class="nav-logo-icon"><i class="fa-solid fa-user-graduate"></i></div>
+        <span>HostelHub <small style="font-size:0.75rem; color:var(--secondary); font-weight:600; text-transform:uppercase;">Resident Portal</small></span>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#my-room-section" class="nav-link active">My Room</a></li>
+        <li><a href="#rooms-section" class="nav-link">Browse Rooms</a></li>
+        <li><a href="#complaints-section" class="nav-link">Complaints & Support</a></li>
+      </ul>
+
+      <div class="nav-user">
+        <div class="nav-user-badge">
+          <span><i class="fa-solid fa-user"></i></span>
+          <span id="student-nav-name">Student</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="API.logout()">
+          Logout <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Student Hero Profile Banner -->
+    <section class="student-hero">
+      <div class="student-hero-info">
+        <div class="student-avatar" id="student-avatar-initial">S</div>
+        <div class="student-hero-details">
+          <h2 id="hero-student-name">Loading Profile...</h2>
+          <div class="student-meta-tags">
+            <span class="student-meta-tag" id="hero-student-roll">—</span>
+            <span class="student-meta-tag" id="hero-student-dept">—</span>
+            <span class="student-meta-tag" id="hero-student-email">—</span>
+            <span class="student-meta-tag" id="hero-student-phone">—</span>
+          </div>
+        </div>
+      </div>
+      <div id="hero-student-room-badge">
+        <span class="badge badge-pending">Checking Allocation...</span>
+      </div>
+    </section>
+
+    <!-- 1. My Allocated Room Section -->
+    <section id="my-room-section" style="margin-bottom: 3rem;">
+      <div class="page-header" style="margin-bottom: 1.25rem;">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-bed"></i> My Room & Roommates</h2>
+          <p>Current active accommodation status and roommate contact directory</p>
+        </div>
+      </div>
+      <div id="my-room-container">
+        <!-- Injected via JavaScript -->
+        <div class="card" style="text-align: center; padding: 2rem;">Loading accommodation status...</div>
+      </div>
+    </section>
+
+    <!-- 2. Room Discovery & Real-Time Availability Explorer -->
+    <section id="rooms-section" style="margin-bottom: 3.5rem;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-magnifying-glass"></i> Browse Available Hostel Rooms</h2>
+          <p>Real-time bed availability across all campus blocks and room categories</p>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Room Type:</span>
+          <button type="button" class="filter-pill type-filter-btn active" data-type="">All Types</button>
+          <button type="button" class="filter-pill type-filter-btn" data-type="Single">Single</button>
+          <button type="button" class="filter-pill type-filter-btn" data-type="Double">Double</button>
+          <button type="button" class="filter-pill type-filter-btn" data-type="Triple">Triple</button>
+          <button type="button" class="filter-pill type-filter-btn" data-type="Deluxe Suite">Deluxe Suite</button>
+        </div>
+
+        <div class="filter-group">
+          <select id="filter-block-select" class="form-select" style="width: auto; padding: 0.4rem 0.85rem; font-size: 0.825rem;">
+            <option value="">All Blocks / Wings</option>
+            <option value="Block A (North)">Block A (North Wing)</option>
+            <option value="Block B (South)">Block B (South Wing)</option>
+          </select>
+
+          <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.825rem; cursor: pointer; color: var(--text-muted); font-weight: 500;">
+            <input type="checkbox" id="filter-available-only" style="cursor: pointer;">
+            Available Only
+          </label>
+        </div>
+      </div>
+
+      <!-- Rooms Grid -->
+      <div class="rooms-grid" id="rooms-grid-container">
+        <!-- Injected via JavaScript -->
+        <div class="empty-state" style="grid-column: 1 / -1;">Loading available rooms...</div>
+      </div>
+    </section>
+
+    <!-- 3. Maintenance & Complaints Section -->
+    <section id="complaints-section" style="margin-bottom: 3rem;">
+      <div class="page-header">
+        <div class="page-header-title">
+          <h2><i class="fa-solid fa-toolbox"></i> Maintenance & Room Support</h2>
+          <p>Submit service tickets for electrical, plumbing, furniture, or connectivity issues</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+        <!-- Left: Submit Complaint Form -->
+        <div>
+          <div id="complaint-unallocated-notice" class="card" style="display: none; border-color: rgba(245, 158, 11, 0.4); text-align: center; padding: 2rem 1.5rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Room Allocation Required</h3>
+            <p style="font-size: 0.875rem; margin-top: 0.35rem;">
+              You must book or be allocated a room before you can file maintenance tickets.
+            </p>
+          </div>
+
+          <div id="complaint-form-box" class="card">
+            <h3 style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span><i class="fa-solid fa-file-signature"></i></span> Submit Service Request
+            </h3>
+
+            <form id="complaint-form">
+              <div class="form-group">
+                <label class="form-label" for="complaint-room-id">Associated Room</label>
+                <select id="complaint-room-id" class="form-select" required disabled>
+                  <!-- Populated automatically with student's allocated room -->
+                </select>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="complaint-category">Issue Category *</label>
+                  <select id="complaint-category" class="form-select" required>
+                    <option value="Electrical">Electrical (Fan, Lights, Switch)</option>
+                    <option value="Plumbing">Plumbing (Tap, Geyser, Drain)</option>
+                    <option value="Furniture">Furniture (Bed, Desk, Chair)</option>
+                    <option value="Cleanliness">Cleanliness / Housekeeping</option>
+                    <option value="Internet">Internet / Wi-Fi Router</option>
+                    <option value="Other">Other Maintenance</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="complaint-priority">Priority Level *</label>
+                  <select id="complaint-priority" class="form-select" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Urgent">Urgent</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="complaint-title">Brief Summary / Title *</label>
+                <input type="text" id="complaint-title" class="form-input" placeholder="e.g. Geyser leaking water in bathroom" required minlength="5">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="complaint-description">Detailed Description *</label>
+                <textarea id="complaint-description" class="form-textarea" placeholder="Please describe the issue, specific location in room, and timing..." required minlength="10"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Submit Complaint Ticket
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right: My Complaints History Timeline -->
+        <div>
+          <div class="card">
+            <h3 style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span><i class="fa-solid fa-clipboard-list"></i></span> My Complaint Tickets
+            </h3>
+            <div id="my-complaints-list" class="complaints-list">
+              <!-- Injected via JavaScript -->
+              <div class="empty-state">Loading your complaints history...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal: Book Room Confirmation -->
+  <div id="booking-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="color: var(--text-main);">Confirm Bed Allocation</h3>
+        <button class="modal-close" onclick="closeModal('booking-modal')">×</button>
+      </div>
+
+      <form id="booking-form">
+        <input type="hidden" id="booking-room-id">
+
+        <div style="background: var(--bg-surface); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.25rem;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+            <span style="color:var(--text-muted); font-size:0.85rem;">Room Selected:</span>
+            <strong style="color:var(--text-main); font-size:1.1rem;" id="booking-modal-room-num">A-101</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+            <span style="color:var(--text-muted); font-size:0.85rem;">Room Type & Block:</span>
+            <span style="color:var(--cyan); font-weight:600;" id="booking-modal-room-type">Double</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+            <span style="color:var(--text-muted); font-size:0.85rem;">Resident Student:</span>
+            <span style="color:var(--text-main);" id="booking-modal-student">Aarav Sharma</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span style="color:var(--text-muted); font-size:0.85rem;">Semester Fee:</span>
+            <strong style="color:var(--emerald);" id="booking-modal-price">₹24,000</strong>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="booking-alloc-date">Allocation / Move-in Date *</label>
+          <input type="date" id="booking-alloc-date" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="booking-remarks">Booking Remarks (Optional)</label>
+          <input type="text" id="booking-remarks" class="form-input" placeholder="e.g. Fall 2026 Regular Term Booking">
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeModal('booking-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="flex: 1.5;">Confirm Room Allocation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 HostelHub Enterprise • Student Portal Management</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/student.js') }}"></script>
+</body>
+</html>
